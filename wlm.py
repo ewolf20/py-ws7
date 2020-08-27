@@ -56,6 +56,27 @@ class WavelengthMeter:
             "exposureMode": self.GetExposureMode()
         }
 
+
+    def SetExposure(self, exposure, channel = 1, array_index = 1):
+        if not self.debug:
+            return self.dll.SetExposureNum(ctypes.c_long(channel), ctypes.c_long(array_index), ctypes.c_long(exposure))
+        else:
+            return 0
+
+    def GetExposure(self, channel = 1, array_index = 1):
+        if not self.debug:
+            return self.dll.GetExposureNum(ctypes.c_long(channel), ctypes.c_long(array_index), ctypes.c_long(0))
+        else:
+            return 0
+    
+    def GetExposureRange(self):
+        if not self.debug:
+            range_low = self.dll.GetExposureRange(ctypes.c_long(0))
+            range_high = self.dll.GetExposureRange(ctypes.c_long(1))
+            return (range_low, range_high)
+        else:
+            return (0, 0)
+
     @property
     def wavelengths(self):
         return [self.GetWavelength(i+1) for i in range(8)]
